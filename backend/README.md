@@ -1,9 +1,9 @@
 # LARAVEL
-docker compose up
-php artisan migrate
-php artisan queue:work redis
-php artisan schedule:run
-serve
+docker compose up  
+php artisan migrate  
+php artisan queue:work redis  
+php artisan schedule:run  
+serve  
 
 # Environment
 SCOUT_DRIVER=meilisearch  
