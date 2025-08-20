@@ -1,0 +1,57 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: vip_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: vip_tutor
+      MYSQL_USER: vip_tutor
+      MYSQL_PASSWORD: vip_tutor
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - app-network
+  meillisearch:
+    image: getmeili/meilisearch
+    container_name: vip_meilisearch
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: "SAMPLE_MASTER_KEY"
+    volumes:
+      - meili_data:/meili_data
+  redis:
+    image: redis:7-alpine
+    container_name: vip_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: vip_redis_commander
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - REDIS_HOSTS=cache:vip_redis:6379:1
+      - REDIS_CACHE_DB=1
+      - REDIS_DB=0
+    networks:
+      - app-network
+    depends_on:
+      - redis
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  meili_data:
+  dbdata:
+  redis_data:
+    
